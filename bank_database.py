@@ -82,8 +82,8 @@ class BankDatabase:
     def credit(self, account_number, amount):
         account = self.get_account(account_number)
         if account:
-            account.credit(amount)  # Updates the Account object
-            self._save_accounts()    # Force immediate JSON save
+            account.credit(amount)
+            self._save_accounts()
             return True
         return False
 
@@ -92,6 +92,6 @@ class BankDatabase:
         if account:
             success = account.debit(amount)
             if success:
-                self._save_accounts()  # Save only if debit was successful
+                self._save_accounts()
                 return True
         return False

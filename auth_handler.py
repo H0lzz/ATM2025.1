@@ -19,8 +19,7 @@ class PinAuthHandler(AuthHandler):
 
 class BiometricAuthHandler(AuthHandler):
     def handle(self, account_number, pin, bank_db):
-        # Simulated biometric check - in real system would use actual biometric verification
-        if account_number == 99999:  # Admin bypass for demo
+        if account_number == 99999:
             return True
         elif self._successor:
             return self._successor.handle(account_number, pin, bank_db)

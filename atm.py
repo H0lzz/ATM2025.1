@@ -15,13 +15,10 @@ class ATM:
         self.display_welcome_message()
 
     def setup_components(self):
-        # Setup cash dispenser strategy
-        self.cash_dispenser = StandardDispenser()  # Can be changed to LargeBillDispenser()
+        self.cash_dispenser = StandardDispenser()
         
-        # Setup authentication chain
         self.auth_handler = BiometricAuthHandler(PinAuthHandler())
         
-        # Setup observers
         self.email_notifier = EmailNotifier()
         self.sms_notifier = SMSNotifier()
         self.attach_observers_to_existing_accounts()
@@ -57,7 +54,7 @@ class ATM:
         return self.auth_handler.handle(account_number, pin, self.bank_db)
 
     def display_main_menu(self):
-        while True:  # Keep showing menu until user quits
+        while True:
             print("\nMain menu:")
             print("1 - View my balance")
             print("2 - Withdraw cash")
