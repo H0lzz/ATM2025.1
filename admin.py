@@ -12,7 +12,8 @@ class AdminInterface:
             print("2 - Add new account")
             print("3 - Update account")
             print("4 - Delete account")
-            print("5 - Back to main menu")
+            print("5 - Exit to main menu")
+            print("6 - Quit ATM entirely")
             choice = input("Enter your choice: ")
 
             if choice == '1':
@@ -25,6 +26,9 @@ class AdminInterface:
                 self.delete_account()
             elif choice == '5':
                 break
+            elif choice == '6':
+                print("\nATM system shutting down. Goodbye!")
+                exit()
             else:
                 print("Invalid choice. Please try again.")
 
