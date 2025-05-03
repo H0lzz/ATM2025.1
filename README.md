@@ -13,34 +13,34 @@ O projeto se trata em uma máquina ATM (projeto de Orientação a Objetos) imple
 
 Relacionamentos:
 
-ATM -> BankDatabase: Composição (1:1)
-ATM -> AdminInterface: Composição (1:1)
-ATM -> CashDispenserStrategy: Agragação (1:1)
-ATM -> AuthHandler: Agragação (1:1)
-ATM -> BankDatabase: Agregação (1:n)
+ATM -> BankDatabase: Composição (1:1)</br>
+ATM -> AdminInterface: Composição (1:1)</br>
+ATM -> CashDispenserStrategy: Agragação (1:1)</br>
+ATM -> AuthHandler: Agragação (1:1)</br>
+ATM -> BankDatabase: Agregação (1:n)</br>
 
-BankDatabse -> Account: Agregação (1:n)
+BankDatabse -> Account: Agregação (1:n)</br>
 
-Account -> AccountObserver: Associação (1:n)
+Account -> AccountObserver: Associação (1:n)</br>
 
-AuthHandler -> Authhandler: Autoassociação (1:n)
-AuthHandler -> PinAuthHandler: Associação (1:n)
-AuthHandler -> BiometricAuthHendler: Associação (1:n)
-PinAuthHandler -> BiometricAuthHandler (Ordem de Cadeia)
+AuthHandler -> Authhandler: Autoassociação (1:n)</br>
+AuthHandler -> PinAuthHandler: Associação (1:n)</br>
+AuthHandler -> BiometricAuthHendler: Associação (1:n)</br>
+PinAuthHandler -> BiometricAuthHandler (Ordem de Cadeia)</br>
 
-CashDispenserStrategy <- StandardDispenser: Generalização (1:1)
-CashDispenserStrategy <- largeBillDispenser: Generalização (1:1)
+CashDispenserStrategy <- StandardDispenser: Generalização (1:1)</br>
+CashDispenserStrategy <- largeBillDispenser: Generalização (1:1)</br>
 
-AdminInterface -> BankDatabase: Dependência (1:1)
+AdminInterface -> BankDatabase: Dependência (1:1)</br>
 
-Transaction <- Withdrawal: Generalização (1:n)
-Transaction <- Deposit: Generalização (1:n)
-Transaction <- BalanceInquiry: Generalização (1:n)
-Transaction -> BankDatabase: Dependência (1:1)
+Transaction <- Withdrawal: Generalização (1:n)</br>
+Transaction <- Deposit: Generalização (1:n)</br>
+Transaction <- BalanceInquiry: Generalização (1:n)</br>
+Transaction -> BankDatabase: Dependência (1:1)</br>
 
-AccountFactory -> Account: Dependência (1:n)
-AccountFactory -> SavingsAccount: Dependência (1:n)
-AccountFactory -> CheckingAccount: Dependência (1:n)
+AccountFactory -> Account: Dependência (1:n)</br>
+AccountFactory -> SavingsAccount: Dependência (1:n)</br>
+AccountFactory -> CheckingAccount: Dependência (1:n)</br>
 
-Account -> EmailNotifier: Associação (1:2)
-Account -> SMSNotifier: Associação (1:2)
+Account -> EmailNotifier: Associação (1:2)</br>
+Account -> SMSNotifier: Associação (1:2)</br>
