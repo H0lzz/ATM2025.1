@@ -38,13 +38,14 @@ Transaction <- Deposit: Generalização (1:n)</br>
 Transaction <- BalanceInquiry: Generalização (1:n)</br>
 Transaction -> BankDatabase: Dependência (1:1)</br>
 
-# Backlog - Histórias de Usuário (User Story)
-
-Arquivo de backlog: [Backlog](docs/UserStories.md)
-Link Trello: (https://trello.com/invite/b/6816187b0f978e40a257edb1/ATTI5879d2caa32b99bec8bfee3eb1da2d5bF3B54DB1/backlog-tppe)</br>
 AccountFactory -> Account: Dependência (1:n)</br>
 AccountFactory -> SavingsAccount: Dependência (1:n)</br>
 AccountFactory -> CheckingAccount: Dependência (1:n)</br>
 
 Account -> EmailNotifier: Associação (1:2)</br>
 Account -> SMSNotifier: Associação (1:2)</br>
+
+# Backlog - Histórias de Usuário (User Story)
+
+Arquivo de backlog: [Backlog](docs/UserStories.md)</br>
+Link Trello: (https://trello.com/invite/b/6816187b0f978e40a257edb1/ATTI5879d2caa32b99bec8bfee3eb1da2d5bF3B54DB1/backlog-tppe)</br>
