@@ -1,0 +1,10 @@
+services:
+  backend:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "4002:4002"
+    volumes:
+      - ./app:/app
+    environment:
+      - ENVIRONMENT=development
