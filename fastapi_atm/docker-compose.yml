@@ -6,6 +6,12 @@ services:
       - "4002:4002"
     volumes:
       - ./app:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: >
+      sh -c "wait-for-it mysql:3306 -t 30 -- 
+      uvicorn main:app --host 0.0.0.0 --port 4002"
     environment:
       - ENVIRONMENT=development
 
@@ -21,10 +27,21 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uadmin", "-padmin123"]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
+  
+  tests:
+    build: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - ENV=test
+    command: >
+      sh -c "wait-for-it mysql:3306 -t 30 -- 
+      pytest tests -x -v"
 
 volumes:
   mysql_data:
