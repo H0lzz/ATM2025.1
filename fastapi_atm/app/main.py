@@ -11,11 +11,11 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    Base.metadata.create_all(bind=engine)
+    print("Startup: conectando recursos...")
+    wait_for_db()
+    init_db()
     yield
-    # Shutdown
-    pass
+    print("Shutdown: limpando recursos...")
 
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -37,9 +37,10 @@ def wait_for_db():
                 time.sleep(5)
         raise Exception("Could not connect to MySQL after multiple attempts")
 
-@app.on_event("startup")
-async def startup():
-    wait_for_db()
+def init_db():
+    print("🗄️  Criando tabelas no banco (se não existirem)...")
+    Base.metadata.create_all(bind=engine)
+
 
 class UserCreate(BaseModel):
     username: str
@@ -55,12 +56,9 @@ async def health_check():
 
 @app.get("/docs", include_in_schema=False)
 def redirect_to_swagger():
-    from fastapi.responses import RedirectResponse
+    from fastapi.responsse import RedirectResponse
     return RedirectResponse(url="/docs")
 
-@app.on_event("startup")
-def startup():
-    init_db()
 
 def get_db():
     db = SessionLocal()
