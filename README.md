@@ -7,6 +7,13 @@ Link do repositório antigo (Orientação a Objetos): https://github.com/H0lzz/A
 
 O projeto se trata em uma máquina ATM (projeto de Orientação a Objetos) implementada com as técnicas e tecnologias emergentes aboraddas em sala de aula na disciplina de TPPE.</br>
 
+# Arquitetura
+A arquitetura escolhida foi a Clean Architecture (Arquitetura Limpa) proposta por Robert C. Martin que garante:</br>
+Separação de responsabilidades</br>
+Baixo acoplamento</br>
+Facilidade de testes</br>
+Escalabilidade e manutenibilidade</br>
+
 # Diagrama UML
 
 ![Diagrama UML](assets/UMLTFTPPE.drawio.png)
