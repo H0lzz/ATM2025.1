@@ -1,0 +1,23 @@
+[
+  {
+    "account_number": 12345,
+    "pin": 54321,
+    "available_balance": 1000.0,
+    "total_balance": 1200.0,
+    "is_admin": false
+  },
+  {
+    "account_number": 98765,
+    "pin": 56789,
+    "available_balance": 200.0,
+    "total_balance": 200.0,
+    "is_admin": false
+  },
+  {
+    "account_number": 99999,
+    "pin": 99999,
+    "available_balance": 0,
+    "total_balance": 0,
+    "is_admin": true
+  }
+]

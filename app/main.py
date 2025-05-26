@@ -5,7 +5,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from models import User
-from database import Base, engine
+from infrastructure.database import Base, engine
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
 
