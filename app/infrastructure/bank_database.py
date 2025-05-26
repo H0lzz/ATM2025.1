@@ -1,5 +1,5 @@
 import json
-from account import Account
+from domain.account import Account
 
 class BankDatabase:
     def __init__(self, filename='accounts.json'):
