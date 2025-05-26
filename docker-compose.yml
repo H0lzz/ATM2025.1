@@ -45,6 +45,13 @@ services:
       pytest tests -x -v"
     volumes:
       - ./app:/app
+  
+  lint:
+    build: .
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "pylint --rcfile=/app/.pylintrc /app"
 
 volumes:
   mysql_data:
