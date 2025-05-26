@@ -43,6 +43,8 @@ services:
     command: >
       sh -c "wait-for-it mysql:3306 -t 30 -- 
       pytest tests -x -v"
+    volumes:
+      - ./app:/app
 
 volumes:
   mysql_data:
