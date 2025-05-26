@@ -1,10 +1,10 @@
-from bank_database import BankDatabase
-from admin import AdminInterface
-from transaction import Withdrawal, Deposit, BalanceInquiry
-from cash_dispenser import StandardDispenser, LargeBillDispenser
-from auth_handler import PinAuthHandler, BiometricAuthHandler
-from observers import EmailNotifier, SMSNotifier
-from account_factory import AccountFactory
+from infrastructure.bank_database import BankDatabase
+from interfaces.admin import AdminInterface
+from domain.transaction import Withdrawal, Deposit, BalanceInquiry
+from infrastructure.cash_dispenser import StandardDispenser, LargeBillDispenser
+from infrastructure.auth_handler import PinAuthHandler, BiometricAuthHandler
+from domain.observers import EmailNotifier, SMSNotifier
+from usecases.account_factory import AccountFactory
 
 class ATM:
     def __init__(self):

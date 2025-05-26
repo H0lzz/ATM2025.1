@@ -1,4 +1,4 @@
-from account import Account, SavingsAccount, CheckingAccount
+from domain.account import Account, SavingsAccount, CheckingAccount
 
 class AccountFactory:
     @staticmethod
