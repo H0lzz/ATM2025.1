@@ -38,7 +38,7 @@ def wait_for_db():
         raise Exception("Could not connect to MySQL after multiple attempts")
 
 def init_db():
-    print("🗄️  Criando tabelas no banco (se não existirem)...")
+    print("Criando tabelas no banco (se não existirem)...")
     Base.metadata.create_all(bind=engine)
 
 
