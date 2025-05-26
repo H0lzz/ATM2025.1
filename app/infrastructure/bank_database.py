@@ -1,9 +1,9 @@
 import json
-from account import Account
+from domain.account import Account
 
 class BankDatabase:
     def __init__(self, filename='accounts.json'):
-        self.filename = filename
+        self.filename = 'infrastructure/data/' + filename
         self.accounts = self._load_accounts()
 
     def _load_accounts(self):

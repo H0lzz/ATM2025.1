@@ -1,5 +1,5 @@
-from bank_database import BankDatabase
-from account import Account
+from infrastructure.bank_database import BankDatabase
+from domain.account import Account
 
 class AdminInterface:
     def __init__(self, bank_db):

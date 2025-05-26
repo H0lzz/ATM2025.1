@@ -1,4 +1,4 @@
-from atm import ATM
+from usecases.atm import ATM
 
 def main():
     print("Starting ATM System...")
