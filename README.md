@@ -52,6 +52,10 @@ AccountFactory -> CheckingAccount: Dependência (1:n)</br>
 Account -> EmailNotifier: Associação (1:2)</br>
 Account -> SMSNotifier: Associação (1:2)</br>
 
+# Modelo Físico do Banco de Dados
+
+![Diagrama do Modelo Físico](assets/modeloFisicoBD.png)
+
 # Backlog - Histórias de Usuário (User Story)
 
 Arquivo de backlog: [Backlog](docs/UserStories.md)</br>
