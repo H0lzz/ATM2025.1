@@ -1,5 +1,7 @@
 import json
 from domain.account import Account
+from sqlalchemy.orm import Session
+from models import Account
 
 class BankDatabase:
     def __init__(self, filename='accounts.json'):
