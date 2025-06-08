@@ -73,6 +73,12 @@ class AuthInput(BaseModel):
 class TransactionInput(BaseModel):
     amount: float
 
+class TransferInput(BaseModel):
+    from_account: int
+    to_account: int
+    amount: float
+    pin: int
+
 @app.get("/", summary="Hello World")
 async def root():
     return {"message": "Hello World from ATM Backend!"}
@@ -148,3 +154,24 @@ def delete_account(account_number: int, bank_db: BankDatabase = Depends(get_bank
     if not success:
         raise HTTPException(status_code=404, detail="Account not found or is admin")
     return {"deleted": True}
+
+@app.get("/accounts/{account_number}/transactions")
+def get_transactions(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
+    transactions = bank_db.get_transactions(account_number)
+    if transactions is None:
+        raise HTTPException(status_code=404, detail="Account not found or no transactions")
+    return [t.to_dict() for t in transactions]
+
+@app.post("/accounts/transfer")
+def transfer(data: TransferInput, bank_db: BankDatabase = Depends(get_bank_db)):
+    if not bank_db.authenticate_user(data.from_account, data.pin):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    success = bank_db.transfer(data.from_account, data.to_account, data.amount)
+    if not success:
+        raise HTTPException(status_code=400, detail="Transfer failed: check balances or accounts")
+    return {"transferred": True}
+
+@app.get("/admin/summary")
+def admin_summary(bank_db: BankDatabase = Depends(get_bank_db)):
+    summary = bank_db.get_admin_summary()
+    return summary
