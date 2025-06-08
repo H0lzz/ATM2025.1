@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from infrastructure.database import SessionLocal
 from models import AccountModel, TransactionModel, TransactionType
 from domain.account import Account
@@ -88,3 +89,58 @@ class BankDatabase:
             self.record_transaction(account_id=acc.id, trans_type="withdrawal", amount=amount)
             return True
         return False
+    
+    def get_transactions(self, account_number: int):
+        account = self.db.query(AccountModel).filter(AccountModel.account_number == account_number).first()
+        if not account:
+            return None
+        transactions = self.db.query(TransactionModel).filter(
+            TransactionModel.account_id == account.id
+        ).order_by(TransactionModel.timestamp.desc()).all()
+        return transactions
+    
+    def transfer(self, from_account: int, to_account: int, amount: float) -> bool:
+        sender = self.db.query(AccountModel).filter(AccountModel.account_number == from_account).first()
+        receiver = self.db.query(AccountModel).filter(AccountModel.account_number == to_account).first()
+
+        if not sender or not receiver or sender.available_balance < amount:
+            return False
+
+        sender.available_balance -= amount
+        sender.total_balance -= amount
+
+        receiver.available_balance += amount
+        receiver.total_balance += amount
+
+        now = datetime.utcnow()
+        self.db.add(TransactionModel(
+            account_id=sender.id,
+            amount=-amount,
+            type='transfer_out',
+            timestamp=now
+        ))
+        self.db.add(TransactionModel(
+            account_id=receiver.id,
+            amount=amount,
+            type='transfer_in',
+            timestamp=now
+        ))
+
+        self.db.commit()
+        return True
+    
+    def get_admin_summary(self):
+        total_accounts = self.db.query(AccountModel).count()
+        total_balance = self.db.query(AccountModel).with_entities(
+            func.sum(AccountModel.total_balance)
+        ).scalar() or 0.0
+        admin_accounts = self.db.query(AccountModel).filter_by(is_admin=True).count()
+
+        return {
+            "total_accounts": total_accounts,
+            "total_balance": total_balance,
+            "admin_accounts": admin_accounts
+        }
+
+
+
