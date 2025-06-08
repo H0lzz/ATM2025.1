@@ -4,21 +4,18 @@ import pymysql
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from models import User
-from infrastructure.database import Base, engine
+from models import User, AccountModel
+from infrastructure.database import Base, engine, SessionLocal
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
+from domain.account import Account
+from infrastructure.bank_database import BankDatabase
+from models import AccountModel, TransactionModel, User
+from datetime import datetime
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("Startup: conectando recursos...")
-    wait_for_db()
-    init_db()
-    yield
-    print("Shutdown: limpando recursos...")
-
-app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+def init_db():
+    from models import AccountModel, TransactionModel
+    Base.metadata.create_all(bind=engine)
 
 def wait_for_db():
     if os.getenv('WAIT_FOR_DB', 'false').lower() == 'true':
@@ -37,14 +34,44 @@ def wait_for_db():
                 time.sleep(5)
         raise Exception("Could not connect to MySQL after multiple attempts")
 
-def init_db():
-    print("Criando tabelas no banco (se não existirem)...")
-    Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Startup: conectando recursos...")
+    wait_for_db()
+    init_db()
+    yield
+    print("Shutdown: limpando recursos...")
 
+app = FastAPI(lifespan=lifespan)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def get_bank_db(db: Session = Depends(get_db)):
+    return BankDatabase(db)
 
 class UserCreate(BaseModel):
     username: str
     email: str
+
+class AccountInput(BaseModel):
+    account_number: int
+    pin: int
+    available_balance: float
+    total_balance: float
+    is_admin: bool = False
+
+class AuthInput(BaseModel):
+    account_number: int
+    pin: int
+
+class TransactionInput(BaseModel):
+    amount: float
 
 @app.get("/", summary="Hello World")
 async def root():
@@ -56,16 +83,8 @@ async def health_check():
 
 @app.get("/docs", include_in_schema=False)
 def redirect_to_swagger():
-    from fastapi.responsse import RedirectResponse
+    from fastapi.responses import RedirectResponse
     return RedirectResponse(url="/docs")
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @app.post("/users/", response_model=UserCreate)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -81,3 +100,51 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@app.get("/accounts/{account_number}")
+def get_account(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
+    acc = bank_db.get_account(account_number)
+    if acc is None:
+        raise HTTPException(status_code=404, detail="Account not found")
+    return acc.to_dict()
+
+@app.post("/accounts")
+def create_account(account: AccountInput, bank_db: BankDatabase = Depends(get_bank_db)):
+    acc = Account(**account.dict())
+    success = bank_db.add_account(acc)
+    return {"created": success}
+
+@app.post("/auth")
+def authenticate(data: AuthInput, bank_db: BankDatabase = Depends(get_bank_db)):
+    if bank_db.authenticate_user(data.account_number, data.pin):
+        return {"status": "Authenticated"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
+
+@app.get("/accounts/{account_number}/balance")
+def get_balance(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
+    total = bank_db.get_total_balance(account_number)
+    available = bank_db.get_available_balance(account_number)
+    if total is None or available is None:
+        raise HTTPException(status_code=404, detail="Account not found")
+    return {"total_balance": total, "available_balance": available}
+
+@app.post("/accounts/{account_number}/credit")
+def credit(account_number: int, data: TransactionInput, bank_db: BankDatabase = Depends(get_bank_db)):
+    success = bank_db.credit(account_number, data.amount)
+    if not success:
+        raise HTTPException(status_code=400, detail="Credit failed")
+    return {"credited": True}
+
+@app.post("/accounts/{account_number}/debit")
+def debit(account_number: int, data: TransactionInput, bank_db: BankDatabase = Depends(get_bank_db)):
+    success = bank_db.debit(account_number, data.amount)
+    if not success:
+        raise HTTPException(status_code=400, detail="Insufficient funds or account not found")
+    return {"debited": True}
+
+@app.delete("/accounts/{account_number}")
+def delete_account(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
+    success = bank_db.delete_account(account_number)
+    if not success:
+        raise HTTPException(status_code=404, detail="Account not found or is admin")
+    return {"deleted": True}
