@@ -57,8 +57,8 @@ class Account:
         return cls(
             data['account_number'],
             data['pin'],
-            data['available_balance'],
-            data['total_balance'],
+            data.get('available_balance', 0),
+            data.get('total_balance', 0),
             data.get('is_admin', False)
         )
 
