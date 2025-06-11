@@ -1,6 +1,7 @@
 import os
 import time
 import pymysql
+from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -79,6 +80,12 @@ class TransferInput(BaseModel):
     amount: float
     pin: int
 
+class AccountUpdate(BaseModel):
+    pin: Optional[int] = None
+    available_balance: Optional[float] = None
+    total_balance: Optional[float] = None
+    is_admin: Optional[bool] = None
+
 @app.get("/", summary="Hello World")
 async def root():
     return {"message": "Hello World from ATM Backend!"}
@@ -113,6 +120,25 @@ def get_account(account_number: int, bank_db: BankDatabase = Depends(get_bank_db
     if acc is None:
         raise HTTPException(status_code=404, detail="Account not found")
     return acc.to_dict()
+
+@app.put("/accounts/{account_number}")
+def update_account(account_number: int, update: AccountUpdate, db: Session = Depends(get_db)):
+    account = db.query(AccountModel).filter(AccountModel.account_number == account_number).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
+
+    if update.pin is not None:
+        account.pin = update.pin
+    if update.available_balance is not None:
+        account.available_balance = update.available_balance
+    if update.total_balance is not None:
+        account.total_balance = update.total_balance
+    if update.is_admin is not None:
+        account.is_admin = update.is_admin
+
+    db.commit()
+    db.refresh(account)
+    return account.to_dict()
 
 @app.post("/accounts")
 def create_account(account: AccountInput, bank_db: BankDatabase = Depends(get_bank_db)):
