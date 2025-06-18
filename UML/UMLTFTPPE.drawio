@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0" version="27.0.9">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0" version="27.1.6">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="375" dy="1856" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="368" dy="2858" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -76,7 +76,7 @@
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-14" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="iTCN-jbBOQAcDVB5wHeE-13" vertex="1">
           <mxGeometry y="26" width="300" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="iTCN-jbBOQAcDVB5wHeE-15" value="create_account(account_type, account_number, pin, &#xa;available_balance, total_balance, is_admin): Account&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-13" vertex="1">
+        <mxCell id="iTCN-jbBOQAcDVB5wHeE-15" value="create_account(account_type, account_number, pin, &#xa;&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-13" vertex="1">
           <mxGeometry y="34" width="300" height="32" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-20" value="SavingsAccount" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
@@ -179,18 +179,18 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-47" value="BankDatabase" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="2010" y="-82" width="310" height="270" as="geometry">
+          <mxGeometry x="2010" y="-82" width="360" height="270" as="geometry">
             <mxRectangle x="550" y="140" width="160" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="iTCN-jbBOQAcDVB5wHeE-48" value="filename: str&#xa;accounts: List[Account]&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-47" vertex="1">
-          <mxGeometry y="26" width="310" height="44" as="geometry" />
+        <mxCell id="iTCN-jbBOQAcDVB5wHeE-48" value="db: Session" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-47" vertex="1">
+          <mxGeometry y="26" width="360" height="44" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-49" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="iTCN-jbBOQAcDVB5wHeE-47" vertex="1">
-          <mxGeometry y="70" width="310" height="8" as="geometry" />
+          <mxGeometry y="70" width="360" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="iTCN-jbBOQAcDVB5wHeE-50" value="get_account(account_number): Optional[Account]&#xa;_load_accounts(): List[Account]&#xa;_save_accounts(): None&#xa;authenticate_user(account_number, pin): bool&#xa;is_admin(account_number): bool&#xa;add_account(account): bool&#xa;delete_account(account_number): bool&#xa;update_account(account_number, new_data): bool&#xa;get_all_accounts(): List[dict]&#xa;get_available_balance(account_number): float&#xa;get_total_balance(account_number): float&#xa;credit(account_number): bool&#xa;debit(account_number): bool&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-47" vertex="1">
-          <mxGeometry y="78" width="310" height="192" as="geometry" />
+        <mxCell id="iTCN-jbBOQAcDVB5wHeE-50" value="get_account(account_number): Optional[Account]&#xa;authenticate_user(account_number, pin): bool&#xa;is_admin(account_number): bool&#xa;add_account(account): bool&#xa;delete_account(account_number): bool&#xa;update_account(account_number, new_data): bool&#xa;get_all_accounts(): List[dict]&#xa;get_available_balance(account_number): float&#xa;get_total_balance(account_number): float&#xa;record_transaction(account_id, type, amount): TransactionModel&#xa;credit(account_number): booldebit(account_number): bool&#xa;get_transactions(account_number):db.query&#xa;get_admin_summery(): dict&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-47" vertex="1">
+          <mxGeometry y="78" width="360" height="192" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="iTCN-jbBOQAcDVB5wHeE-33" target="iTCN-jbBOQAcDVB5wHeE-40" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -258,7 +258,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-72" value="&lt;&lt;Abstract&gt;&gt; AuthHandler&#xa;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="2330" y="-105" width="270" height="90" as="geometry">
+          <mxGeometry x="2415" y="-120" width="270" height="90" as="geometry">
             <mxRectangle x="550" y="140" width="160" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -272,7 +272,7 @@
           <mxGeometry y="58" width="270" height="32" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-76" value="PinAuthHandler" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="2520" y="-216" width="273" height="66" as="geometry">
+          <mxGeometry x="2500" y="-240" width="273" height="66" as="geometry">
             <mxRectangle x="550" y="140" width="160" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -283,7 +283,7 @@
           <mxGeometry y="34" width="273" height="32" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-79" value="BiometricAuthHandler" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="2520" y="33" width="273" height="66" as="geometry">
+          <mxGeometry x="2490" y="20" width="273" height="66" as="geometry">
             <mxRectangle x="550" y="140" width="160" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -352,18 +352,18 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-90" value="ATM" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="2420" y="140" width="280" height="310" as="geometry">
+          <mxGeometry x="2420" y="140" width="280" height="250" as="geometry">
             <mxRectangle x="550" y="140" width="160" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="iTCN-jbBOQAcDVB5wHeE-91" value="current_account_number: int&#xa;bank_db: BankDatabase&#xa;admin_interface: AdminInterface&#xa;cash_dispenser: CashDispenserStrategy&#xa;auth_handler: AuthHandler&#xa;email_notifier: EmailNotifier&#xa;sms_notifier: SMSNotifier&#xa;&#xa;&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-90" vertex="1">
-          <mxGeometry y="26" width="280" height="114" as="geometry" />
+        <mxCell id="iTCN-jbBOQAcDVB5wHeE-91" value="current_account_number: int&#xa;bank_db: BankDatabase&#xa;admin_interface: AdminInterface&#xa;&#xa;&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-90" vertex="1">
+          <mxGeometry y="26" width="280" height="54" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-92" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="iTCN-jbBOQAcDVB5wHeE-90" vertex="1">
-          <mxGeometry y="140" width="280" height="8" as="geometry" />
+          <mxGeometry y="80" width="280" height="8" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-93" value="setup_components(): None&#xa;attach_observers_to_existing_accounts(): None&#xa;display_welcome_message(): None&#xa;prompt_for_account_number(): None&#xa;authenticate_user(account_number, pin): bool&#xa;display_main_menu(): None&#xa;display_balance(): None&#xa;withdrawal(): None&#xa;deposit(): None&#xa;change_dispenser_mode(): None&#xa;&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=0;shadow=0;html=0;" parent="iTCN-jbBOQAcDVB5wHeE-90" vertex="1">
-          <mxGeometry y="148" width="280" height="162" as="geometry" />
+          <mxGeometry y="88" width="280" height="162" as="geometry" />
         </mxCell>
         <mxCell id="iTCN-jbBOQAcDVB5wHeE-105" value="&lt;div&gt;Relacionamentos:&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ATM -&amp;gt; BankDatabase: Composição (1:1)&lt;/div&gt;&lt;div&gt;ATM -&amp;gt; AdminInterface: Composição (1:1)&lt;/div&gt;&lt;div&gt;ATM -&amp;gt; CashDispenserStrategy: Agragação (1:1)&lt;/div&gt;&lt;div&gt;ATM -&amp;gt; AuthHandler: Agragação (1:1)&lt;/div&gt;&lt;div&gt;ATM -&amp;gt; BankDatabase: Agregação (1:n)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;BankDatabse -&amp;gt; Account: Agregação (1:n)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Account -&amp;gt; AccountObserver: Associação (1:n)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;AuthHandler -&amp;gt; Authhandler: Autoassociação (1:n)&lt;/div&gt;&lt;div&gt;AuthHandler -&amp;gt; PinAuthHandler:&amp;nbsp;Associação (1:n)&lt;/div&gt;&lt;div&gt;AuthHandler -&amp;gt; BiometricAuthHendler:&amp;nbsp;Associação (1:n)&lt;/div&gt;&lt;div&gt;PinAuthHandler -&amp;gt; BiometricAuthHandler (Ordem de Cadeia)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;CashDispenserStrategy &amp;lt;- StandardDispenser: Generalização (1:1)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;CashDispenserStrategy &amp;lt;- largeBillDispenser: Generalização (1:1)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;AdminInterface -&amp;gt; BankDatabase: Dependência (1:1)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Transaction &amp;lt;- Withdrawal: Generalização (1:n)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Transaction &amp;lt;- Deposit: Generalização (1:n)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Transaction &amp;lt;- BalanceInquiry: Generalização (1:n)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Transaction -&amp;gt; BankDatabase: Dependência (1:1)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;AccountFactory -&amp;gt; Account: Dependência (1:n)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;AccountFactory -&amp;gt; SavingsAccount: Dependência (1:n)&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;AccountFactory -&amp;gt; CheckingAccount: Dependência (1:n)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;&lt;div&gt;Account -&amp;gt; EmailNotifier: Associação (1:2)&lt;/div&gt;&lt;div&gt;&lt;div&gt;Account -&amp;gt; SMSNotifier: Associação (1:2)&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="2840" y="-244" width="430" height="530" as="geometry" />
