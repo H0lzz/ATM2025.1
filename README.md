@@ -60,3 +60,4 @@ Account -> SMSNotifier: Associação (1:2)</br>
 
 Arquivo de backlog: [Backlog](docs/UserStories.md)</br>
 Link Trello: (https://trello.com/invite/b/6816187b0f978e40a257edb1/ATTI5879d2caa32b99bec8bfee3eb1da2d5bF3B54DB1/backlog-tppe)</br>
+Protótipo de alta fidelidade (Figma): https://www.figma.com/proto/7igZPLpx9gD3tHRqC0nXxF/ATM2025.1?node-id=7501-175&starting-point-node-id=7501%3A175&t=7HSQscz8ki573vfO-1 </br>
