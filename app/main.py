@@ -1,8 +1,9 @@
 import os
 import time
 import pymysql
+import random
 from typing import Optional
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Body
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from models import User, AccountModel
@@ -188,16 +189,70 @@ def get_transactions(account_number: int, bank_db: BankDatabase = Depends(get_ba
         raise HTTPException(status_code=404, detail="Account not found or no transactions")
     return [t.to_dict() for t in transactions]
 
-@app.post("/accounts/transfer")
-def transfer(data: TransferInput, bank_db: BankDatabase = Depends(get_bank_db)):
-    if not bank_db.authenticate_user(data.from_account, data.pin):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    success = bank_db.transfer(data.from_account, data.to_account, data.amount)
-    if not success:
-        raise HTTPException(status_code=400, detail="Transfer failed: check balances or accounts")
-    return {"transferred": True}
-
 @app.get("/admin/summary")
 def admin_summary(bank_db: BankDatabase = Depends(get_bank_db)):
     summary = bank_db.get_admin_summary()
     return summary
+
+@app.post("/notify")
+def send_notification(account_number: int = Body(...), type: str = Body(...), amount: float = Body(...)):
+    """
+    Simula envio de notificação por SMS/email para transações de saque ou depósito.
+    """
+    if type not in ("withdraw", "deposit"):
+        raise HTTPException(status_code=400, detail="Tipo de transação inválido")
+    
+    message = f"Notificação: Transação '{type}' no valor de ${amount:.2f} realizada na conta {account_number}."
+    print(message)  
+    return {"message": message, "status": "sent"}
+
+@app.post("/admin/auth/biometric")
+def authenticate_biometric(account_number: int = Body(...), biometric_token: Optional[str] = Body(None), pin: Optional[int] = Body(None)):
+    """
+    Simula autenticação biométrica com fallback para PIN.
+    """
+    if account_number >= 1000:
+        raise HTTPException(status_code=403, detail="Conta não é administrativa")
+
+    biometric_success = biometric_token == "VALID_BIOMETRIC"
+    if biometric_success:
+        return {"status": "authenticated", "method": "biometric"}
+
+    if pin == 1234:
+        return {"status": "authenticated", "method": "pin"}
+
+    raise HTTPException(status_code=401, detail="Falha na autenticação biométrica e PIN inválido")
+
+
+@app.get("/auth/logs")
+def get_auth_logs():
+    """
+    Simula log de tentativas de autenticação falhas.
+    """
+    return {
+        "logs": [
+            {"account": 999, "method": "biometric", "success": False, "timestamp": "2025-06-07T12:00:00"},
+            {"account": 999, "method": "pin", "success": True, "timestamp": "2025-06-07T12:01:00"},
+        ]
+    }
+
+current_strategy = {"denomination": 100}
+
+
+@app.post("/dispenser/set-strategy")
+def set_dispenser_strategy(denomination: int = Body(...)):
+    """
+    Define a estratégia de dispensador (20 ou 100).
+    """
+    if denomination not in (20, 100):
+        raise HTTPException(status_code=400, detail="Somente valores de 20 ou 100 são aceitos")
+    current_strategy["denomination"] = denomination
+    return {"message": f"Estratégia de dispensador atualizada para ${denomination}."}
+
+
+@app.get("/dispenser/strategy")
+def get_dispenser_strategy():
+    """
+    Retorna a estratégia atual do dispensador.
+    """
+    return {"current_strategy": current_strategy["denomination"]}
