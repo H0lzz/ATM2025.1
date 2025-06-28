@@ -1,40 +1,22 @@
 import os
 import time
 import pymysql
-import random
-from typing import Optional
-from fastapi import FastAPI, Depends, HTTPException, Body
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy.orm import Session
-from models import User, AccountModel
-from infrastructure.database import Base, engine, SessionLocal
-from pydantic import BaseModel
 from contextlib import asynccontextmanager
-from domain.account import Account
-from infrastructure.bank_database import BankDatabase
-from models import AccountModel, TransactionModel, User
-from datetime import datetime
+
+from infrastructure.database import Base, engine
+from utils.db_utils import wait_for_db
+
+from routes.auth import router as auth_router
+from routes.admin import router as admin_router
+from routes.dispenser import router as dispenser_router
+from routes.notifications import router as notifications_router
+from routes.accounts import router as accounts_router
+from routes.users import router as users_router
 
 def init_db():
-    from models import AccountModel, TransactionModel
     Base.metadata.create_all(bind=engine)
-
-def wait_for_db():
-    if os.getenv('WAIT_FOR_DB', 'false').lower() == 'true':
-        max_retries = 10
-        for _ in range(max_retries):
-            try:
-                conn = pymysql.connect(
-                    host=os.getenv('DB_HOST'),
-                    user=os.getenv('DB_USER'),
-                    password=os.getenv('DB_PASSWORD'),
-                    database=os.getenv('DB_NAME')
-                )
-                conn.close()
-                return
-            except pymysql.Error:
-                time.sleep(5)
-        raise Exception("Could not connect to MySQL after multiple attempts")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -47,46 +29,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-def get_bank_db(db: Session = Depends(get_db)):
-    return BankDatabase(db)
-
-class UserCreate(BaseModel):
-    username: str
-    email: str
-
-class AccountInput(BaseModel):
-    account_number: int
-    pin: int
-    available_balance: float
-    total_balance: float
-    is_admin: bool = False
-
-class AuthInput(BaseModel):
-    account_number: int
-    pin: int
-
-class TransactionInput(BaseModel):
-    amount: float
-
-class TransferInput(BaseModel):
-    from_account: int
-    to_account: int
-    amount: float
-    pin: int
-
-class AccountUpdate(BaseModel):
-    pin: Optional[int] = None
-    available_balance: Optional[float] = None
-    total_balance: Optional[float] = None
-    is_admin: Optional[bool] = None
-
 @app.get("/", summary="Hello World")
 async def root():
     return {"message": "Hello World from ATM Backend!"}
@@ -95,164 +37,9 @@ async def root():
 async def health_check():
     return {"status": "OK"}
 
-@app.get("/docs", include_in_schema=False)
-def redirect_to_swagger():
-    from fastapi.responses import RedirectResponse
-    return RedirectResponse(url="/docs")
-
-@app.post("/users/", response_model=UserCreate)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = User(username=user.username, email=user.email)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-@app.get("/users/{user_id}")
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-@app.get("/accounts/{account_number}")
-def get_account(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
-    acc = bank_db.get_account(account_number)
-    if acc is None:
-        raise HTTPException(status_code=404, detail="Account not found")
-    return acc.to_dict()
-
-@app.put("/accounts/{account_number}")
-def update_account(account_number: int, update: AccountUpdate, db: Session = Depends(get_db)):
-    account = db.query(AccountModel).filter(AccountModel.account_number == account_number).first()
-    if not account:
-        raise HTTPException(status_code=404, detail="Account not found")
-
-    if update.pin is not None:
-        account.pin = update.pin
-    if update.available_balance is not None:
-        account.available_balance = update.available_balance
-    if update.total_balance is not None:
-        account.total_balance = update.total_balance
-    if update.is_admin is not None:
-        account.is_admin = update.is_admin
-
-    db.commit()
-    db.refresh(account)
-    return account.to_dict()
-
-@app.post("/accounts")
-def create_account(account: AccountInput, bank_db: BankDatabase = Depends(get_bank_db)):
-    acc = Account(**account.dict())
-    success = bank_db.add_account(acc)
-    return {"created": success}
-
-@app.post("/auth")
-def authenticate(data: AuthInput, bank_db: BankDatabase = Depends(get_bank_db)):
-    if bank_db.authenticate_user(data.account_number, data.pin):
-        return {"status": "Authenticated"}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
-
-@app.get("/accounts/{account_number}/balance")
-def get_balance(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
-    total = bank_db.get_total_balance(account_number)
-    available = bank_db.get_available_balance(account_number)
-    if total is None or available is None:
-        raise HTTPException(status_code=404, detail="Account not found")
-    return {"total_balance": total, "available_balance": available}
-
-@app.post("/accounts/{account_number}/credit")
-def credit(account_number: int, data: TransactionInput, bank_db: BankDatabase = Depends(get_bank_db)):
-    success = bank_db.credit(account_number, data.amount)
-    if not success:
-        raise HTTPException(status_code=400, detail="Credit failed")
-    return {"credited": True}
-
-@app.post("/accounts/{account_number}/debit")
-def debit(account_number: int, data: TransactionInput, bank_db: BankDatabase = Depends(get_bank_db)):
-    success = bank_db.debit(account_number, data.amount)
-    if not success:
-        raise HTTPException(status_code=400, detail="Insufficient funds or account not found")
-    return {"debited": True}
-
-@app.delete("/accounts/{account_number}")
-def delete_account(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
-    success = bank_db.delete_account(account_number)
-    if not success:
-        raise HTTPException(status_code=404, detail="Account not found or is admin")
-    return {"deleted": True}
-
-@app.get("/accounts/{account_number}/transactions")
-def get_transactions(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
-    transactions = bank_db.get_transactions(account_number)
-    if transactions is None:
-        raise HTTPException(status_code=404, detail="Account not found or no transactions")
-    return [t.to_dict() for t in transactions]
-
-@app.get("/admin/summary")
-def admin_summary(bank_db: BankDatabase = Depends(get_bank_db)):
-    summary = bank_db.get_admin_summary()
-    return summary
-
-@app.post("/notify")
-def send_notification(account_number: int = Body(...), type: str = Body(...), amount: float = Body(...)):
-    """
-    Simula envio de notificação por SMS/email para transações de saque ou depósito.
-    """
-    if type not in ("withdraw", "deposit"):
-        raise HTTPException(status_code=400, detail="Tipo de transação inválido")
-    
-    message = f"Notificação: Transação '{type}' no valor de ${amount:.2f} realizada na conta {account_number}."
-    print(message)  
-    return {"message": message, "status": "sent"}
-
-@app.post("/admin/auth/biometric")
-def authenticate_biometric(account_number: int = Body(...), biometric_token: Optional[str] = Body(None), pin: Optional[int] = Body(None)):
-    """
-    Simula autenticação biométrica com fallback para PIN.
-    """
-    if account_number >= 1000:
-        raise HTTPException(status_code=403, detail="Conta não é administrativa")
-
-    biometric_success = biometric_token == "VALID_BIOMETRIC"
-    if biometric_success:
-        return {"status": "authenticated", "method": "biometric"}
-
-    if pin == 1234:
-        return {"status": "authenticated", "method": "pin"}
-
-    raise HTTPException(status_code=401, detail="Falha na autenticação biométrica e PIN inválido")
-
-
-@app.get("/auth/logs")
-def get_auth_logs():
-    """
-    Simula log de tentativas de autenticação falhas.
-    """
-    return {
-        "logs": [
-            {"account": 999, "method": "biometric", "success": False, "timestamp": "2025-06-07T12:00:00"},
-            {"account": 999, "method": "pin", "success": True, "timestamp": "2025-06-07T12:01:00"},
-        ]
-    }
-
-current_strategy = {"denomination": 100}
-
-
-@app.post("/dispenser/set-strategy")
-def set_dispenser_strategy(denomination: int = Body(...)):
-    """
-    Define a estratégia de dispensador (20 ou 100).
-    """
-    if denomination not in (20, 100):
-        raise HTTPException(status_code=400, detail="Somente valores de 20 ou 100 são aceitos")
-    current_strategy["denomination"] = denomination
-    return {"message": f"Estratégia de dispensador atualizada para ${denomination}."}
-
-
-@app.get("/dispenser/strategy")
-def get_dispenser_strategy():
-    """
-    Retorna a estratégia atual do dispensador.
-    """
-    return {"current_strategy": current_strategy["denomination"]}
+app.include_router(auth_router)
+app.include_router(admin_router)
+app.include_router(dispenser_router)
+app.include_router(notifications_router)
+app.include_router(accounts_router)
+app.include_router(users_router)
