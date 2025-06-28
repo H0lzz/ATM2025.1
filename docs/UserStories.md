@@ -114,14 +114,3 @@
 **Critérios de Aceitação**:  
 - Troca dinâmica de estratégia.  
 - Mensagem de confirmação.  
-
----
-
-#### **US11 - Recuperação de Dados**  
-**Como** sistema,  
-**Quero** carregar contas padrão se o arquivo JSON estiver corrompido,  
-**Para** garantir disponibilidade.  
-
-**Critérios de Aceitação**:  
-- Criar arquivo padrão automaticamente.  
-- Manter dados críticos (ex: conta admin).  
