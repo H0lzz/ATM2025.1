@@ -30,13 +30,15 @@ class BankDatabase:
             return True
         return False
 
-    def delete_account(self, account_number):
-        acc = self.db.query(AccountModel).filter_by(account_number=account_number).first()
-        if acc and not acc.is_admin:
-            self.db.delete(acc)
-            self.db.commit()
-            return True
-        return False
+    def delete_account(self, account_number: int) -> bool:
+        acc = self.db.query(AccountModel).filter(AccountModel.account_number == account_number).first()
+        if acc is None or acc.is_admin:
+            return False
+        self.db.query(TransactionModel).filter(TransactionModel.account_id == acc.id).delete()
+        self.db.delete(acc)
+        self.db.commit()
+        return True
+
 
     def update_account(self, account_number, new_data):
         acc = self.db.query(AccountModel).filter_by(account_number=account_number).first()
