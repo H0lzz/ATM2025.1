@@ -23,7 +23,11 @@ def get_bank_db(db: Session = Depends(get_db)):
 @router.post("")
 def authenticate(data: AuthInput, bank_db: BankDatabase = Depends(get_bank_db)):
     if bank_db.authenticate_user(data.account_number, data.pin):
-        return {"status": "Authenticated"}
+        account = bank_db.get_account(data.account_number)
+        return {
+            "status": "Authenticated",
+            "is_admin": account.is_admin
+        }
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @router.get("/logs")

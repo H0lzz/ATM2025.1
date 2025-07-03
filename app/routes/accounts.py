@@ -73,6 +73,13 @@ def update_account(account_number: int, update: AccountUpdate, db: Session = Dep
     db.refresh(account)
     return account.to_dict()
 
+@router.delete("/{account_number}")
+def delete_account(account_number: int, bank_db: BankDatabase = Depends(get_bank_db)):
+    success = bank_db.delete_account(account_number)
+    if not success:
+        raise HTTPException(status_code=404, detail="Account not found or is admin")
+    return {"deleted": True}
+
 @router.post("/{account_number}/credit")
 def credit(account_number: int, data: TransactionInput, bank_db: BankDatabase = Depends(get_bank_db)):
     success = bank_db.credit(account_number, data.amount)
