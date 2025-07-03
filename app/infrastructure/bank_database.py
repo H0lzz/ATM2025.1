@@ -86,7 +86,7 @@ class BankDatabase:
             acc.available_balance -= amount
             acc.total_balance -= amount
             self.db.commit()
-            self.record_transaction(account_id=acc.id, trans_type="withdrawal", amount=amount)
+            self.record_transaction(account_id=acc.id, trans_type="withdraw", amount=amount)
             return True
         return False
     
